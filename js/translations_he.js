@@ -1,0 +1,23 @@
+var translations = {
+  'Private':'פרטי',
+  'Public':'ציבורי',
+  'Archive':'ארכיון',
+  'Hour':'שעה',
+  'Sun':'א',
+  'Mon':'ב',
+  'Tue':'ג',
+  'Wed':'ד',
+  'Thu':'ה',
+  'Fri':'ו',
+  'Messages':'הודעות',
+  'Search results':'תוצאות חיפוש',
+  'Search':'חיפוש',
+  'doc':'מסמך',
+  'video':'וידאו',
+  'link':'לינק',
+  'presen':'מצגת',
+  'image':'תמונה',
+  'mine':'שלי',
+  'student':'תלמיד',
+  'teacher':'מורה'
+};

@@ -1,0 +1,85 @@
+<!doctype html>
+<html ng-app dir="rtl">
+
+<head lang="en">
+  <meta charset="utf-8">
+  <title>Calendar</title>
+  <link rel="stylesheet" href="style.css" type="text/css"/>
+  
+  <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="js/pupil_schedule.js"></script>
+  <script type="text/javascript" src="js/time_table.js"></script>
+  <script type="text/javascript" src="js/translations_he.js"></script>
+  <script type="text/javascript" src="js/all_subjects.js"></script>
+  <script type="text/javascript" src="js/script.js"></script>
+  <script type="text/javascript" src="js/angular.min.js"></script>
+</head>
+
+<body class="not_main" id="calendar" ng-controller="calendarCtrl">
+  <header id="header">
+    <a href="#" class="config"></a>
+    <a href="#" class="mail"></a>
+      <span class="my_messages_qty">5</span>   
+    <a href="#" class="list"></a>
+    <a href="#" class="back"></a>
+    <div id="header_inner">
+      <span class="title">{{studentName}}</span>
+      <span class="divider right"></span>
+      <span class="arrow right"></span>
+      <span class="date">{{weekRange}}</span>
+      <span class="arrow left"></span>
+      <span class="divider left"></span>
+    </div>
+  </header>
+  <div id="stripped"></div>
+  
+  <div id="content">
+    <table cellspacing="0">
+      <thead>
+        <tr>
+	        <th><span>{{t('Hour')}}</span></th>
+	        <th><span>{{t('Sun')}}</span></th>
+	        <th><span>{{t('Mon')}}</span></th>
+	        <th><span>{{t('Tue')}}</span></th>
+	        <th><span>{{t('Wed')}}</span></th>
+	        <th><span>{{t('Thu')}}</span></th>
+	        <th><span>{{t('Fri')}}</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="row in calendar">
+          <td>{{$index + 1}}</td>
+          <td ng-bind-html-unsafe="row.1.content"></td>
+          <td ng-bind-html-unsafe="row.2.content"></td>
+          <td ng-bind-html-unsafe="row.3.content"></td>
+          <td ng-bind-html-unsafe="row.4.content"></td>
+          <td ng-bind-html-unsafe="row.5.content"></td>
+          <td ng-bind-html-unsafe="row.6.content"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <aside id="first_sidebar">  
+    <section id="messages_list">
+      <header>{{t('Messages')}}</header>
+      <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </section>
+  </aside>    
+</body>
+</html>

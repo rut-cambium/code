@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html ng-app dir="rtl">
+
+<head lang="en">
+  <meta charset="utf-8">
+  <title>Main</title>
+  <link rel="stylesheet" href="style.css" type="text/css"/>
+  
+  <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="js/pupil_schedule.js"></script>
+  <script type="text/javascript" src="js/time_table.js"></script>
+  <script type="text/javascript" src="js/translations_he.js"></script>
+  <script type="text/javascript" src="js/all_subjects.js"></script>
+  <script type="text/javascript" src="js/script.js"></script>
+  <script type="text/javascript" src="js/angular.min.js"></script>
+</head>
+
+<body ng-controller="mainCtrl">
+  <header id="header">
+    <a href="#" id="logo"></a>
+    <a href="#" class="avatar"></a>
+    <a href="#" class="config"></a>
+    <a href="#" class="mail"></a> 
+    <span class="my_messages_qty">5</span>   
+    
+    <form id="search" ng-submit="submitSearch(searchTerm)">
+      <input class="text" type="text" placeholder="{{t('Search')}}" name="search" ng-model="searchTerm" />
+      <input class="submit" type="submit" value="" />
+    </form> 
+  </header>
+  
+  <aside id="first_sidebar">
+    <div id="header_tabs">
+      <a href="#" class="h_tabs">{{courseName}}</a>
+      <menu id="available_courses">
+        <li ng-repeat="(courseName, key) in uniqueStudentCourses">
+          <a class="{{key.cssClass}}" href="main.html?i={{key.key}}&title={{key.title}}">{{courseName}}</a>
+        </li>
+      </menu>
+    </div>
+    
+    <menu id="subjects_menu">
+	    <li ng-repeat="subject in subjectMenu" class="qty_{{subject.qty}} {{subject.cssClass}}" ng-click="menuClick(subject.name)">
+	      <span>{{subject.name}}</span>
+	    </li>
+	  </menu>
+	  
+	  <section id="messages_list">
+	    <header>{{t('Messages')}}</header>
+	    <ul>
+	      <li></li>
+	      <li></li>
+	      <li></li>
+	      <li></li>
+	      <li></li>
+	      <li></li>
+	    </ul>
+	  </section>
+  </aside>
+  <div id="content">
+    <div id="nav_bar">
+      <div id="nav_tabs">
+        <span class="tab add">&nbsp;</span>
+        <span class="tab all {{allTabClass}}" rel="courses_all" ng-click="tabClicked('all')">{{t('All')}}</span>
+        <span class="tab mine {{mineTabClass}}" rel="courses_mine" ng-click="tabClicked('mine')">{{t('Mine')}}</span> 
+        <span class="sika"></span>      
+      </div>
+    </div>
+    <div id="courses_container">
+      <div class="courses_section {{mineTabClass}}" id="courses_mine">
+        <div ng-repeat="course in coursesMine | filter:searchTerm" class="course">
+          <a class-"course_box_link" href="preview.html?i={{course.index}}"></a>
+          <div class="image_box">
+            <a href="preview.html?i={{course.index}}">
+              <img class="course_image" ng-src="images/courses/{{course.image}}" alt="{{course.CourseSubject}}" title="{{course.CourseSubject}}" rel="{{course.index}}" />
+            </a>
+          </div>
+          <div class="course_content">
+            <div class="course_header">
+                <div class="relate {{course.relatedClass}}" src="" alt="" ></div> 
+              <div class="type {{course.docTypeClass}}" src="" alt="" ></div> 
+              <span class="date">{{course.date}}</span> | 
+              <span class="author">{{course.LoadedBy}}</span>
+              <span class="vote_stars stars_{{course.Rank}}">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+            </div>
+            <a href="preview.html?i={{course.index}}" class="course_text">
+              {{course.KnowlyRemarks}}
+            </a>
+            <div class="course_footer">
+              <a class="footer_share share1 {{course.share1Disabled}}" href="#" title="{{t('Pin')}}"></a>
+              <a class="footer_share share2 {{course.share2Disabled}}" href="#" title="{{t('Share')}}"></a>
+              <a class="footer_share share3 {{course.share3Disabled}}" href="#" title="{{t('Archive')}}"></a>
+              <a href="#" class="course_messages">
+                <span class="course_messages_qty">{{course.messagesQty}}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="courses_section {{allTabClass}}" id="courses_all">
+	      <div ng-repeat="course in coursesAll | filter:searchTerm" class="course">
+	        <a class-"course_box_link" href="preview.html?i={{course.index}}"></a>
+          <div class="image_box">
+            <a href="preview.html?i={{course.index}}">
+              <img class="course_image" ng-src="images/courses/{{course.image}}" alt="{{course.CourseSubject}}" title="{{course.CourseSubject}}" rel="{{course.index}}" />
+            </a>
+          </div>
+          <div class="course_content">
+            <div class="course_header">
+               <div class="relate {{course.relatedClass}}" src="" alt="" ></div> 
+              <div class="type {{course.docTypeClass}}" src="" alt="" ></div>  
+              <span class="date">{{course.date}}</span> | 
+              <span class="author">{{course.LoadedBy}}</span>
+              <span class="vote_stars stars_{{course.Rank}}">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+            </div>
+            <a href="preview.html?i={{course.index}}" class="course_text">
+              {{course.KnowlyRemarks}}
+            </a>
+            <div class="course_footer">
+              <a class="footer_share share1 {{course.share1Disabled}}" href="#" title="{{t('Pin')}}"></a>
+              <a class="footer_share share2 {{course.share2Disabled}}" href="#" title="{{t('Share')}}"></a>
+              <a class="footer_share share3 {{course.share3Disabled}}" href="#" title="{{t('Archive')}}"></a>
+              <a href="#" class="course_messages">
+                <span class="course_messages_qty">{{course.messagesQty}}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+	    </div>
+    </div>
+  </div>
+</body>
+</html>
