@@ -1,4 +1,3 @@
-
 var uniqueCourses = {}, uniqueSubjects = {}, courseSubjects = {}, uniqueStudentCourses = {};
 
 /**
@@ -7,49 +6,49 @@ var uniqueCourses = {}, uniqueSubjects = {}, courseSubjects = {}, uniqueStudentC
 function getAllData(courses, pupils, allSubjects) {
 	var i = 0, ind, cTitle, cssClass;
   //get available subjects for courses
-	for (key in courses) {
-		uniqueCourses[courses[key].OwnedByCourse] = i++;
-	};
-	//get available subjects for courses (from pupil table)
-	for (key in pupils) {
-		if ($.trim(pupils[key].Subject) != '' && !uniqueSubjects[pupils[key].Subject]) {
-		  //uniqueSubjects[pupils[key].Subject] = {name:pupils[key].Subject, qty:0, cssClass:''};
-		}
-		if ($.trim(pupils[key].Course) != '' && !uniqueStudentCourses[pupils[key].Course]) {
-			ind = uniqueCourses[pupils[key].Course] ? uniqueCourses[pupils[key].Course] : '';
-			cTitle = uniqueCourses[pupils[key].Course] ? '' : pupils[key].Course;
-			cssClass = uniqueCourses[pupils[key].Course] ? '' : 'no_knowly';
-		  uniqueStudentCourses[pupils[key].Course] = {key:ind,cssClass:cssClass,title:cTitle};
-		}
-	};
-
-	for (key in allSubjects) {
-		if ($.trim(allSubjects[key].SubjectName) != '' && !uniqueSubjects[allSubjects[key].SubjectName]) {
-		  uniqueSubjects[allSubjects[key].SubjectName] = {name:allSubjects[key].SubjectName,qty:0,cssClass2:'no_knowly'};
-		}
-		
-		if ($.trim(allSubjects[key].SubjectName) != '') {
-			if (!courseSubjects[allSubjects[key].IncludedInCourse]) {
-				courseSubjects[allSubjects[key].IncludedInCourse] = {};
-			}
-			courseSubjects[allSubjects[key].IncludedInCourse][allSubjects[key].SubjectName] = {name:allSubjects[key].SubjectName,qty:0,cssClass:'no_knowly'};
-		}
-	};
+  for (key in courses) {
+  	uniqueCourses[courses[key].OwnedByCourse] = i++;
+  };
+  //get available subjects for courses (from pupil table)
+  for (key in pupils) {
+  	if ($.trim(pupils[key].Subject) != '' && !uniqueSubjects[pupils[key].Subject]) {
+  	  //uniqueSubjects[pupils[key].Subject] = {name:pupils[key].Subject, qty:0, cssClass:''};
+  	}
+  	if ($.trim(pupils[key].Course) != '' && !uniqueStudentCourses[pupils[key].Course]) {
+  		ind = uniqueCourses[pupils[key].Course] ? uniqueCourses[pupils[key].Course] : '';
+  		cTitle = uniqueCourses[pupils[key].Course] ? '' : pupils[key].Course;
+  		cssClass = uniqueCourses[pupils[key].Course] ? '' : 'no_knowly';
+  	  uniqueStudentCourses[pupils[key].Course] = {key:ind,cssClass:cssClass,title:cTitle};
+  	}
+  };
+  
+  for (key in allSubjects) {
+  	if ($.trim(allSubjects[key].SubjectName) != '' && !uniqueSubjects[allSubjects[key].SubjectName]) {
+  	  uniqueSubjects[allSubjects[key].SubjectName] = {name:allSubjects[key].SubjectName,qty:0,cssClass2:'no_knowly'};
+  	}
+  	
+  	if ($.trim(allSubjects[key].SubjectName) != '') {
+  		if (!courseSubjects[allSubjects[key].IncludedInCourse]) {
+  			courseSubjects[allSubjects[key].IncludedInCourse] = {};
+  		}
+  		courseSubjects[allSubjects[key].IncludedInCourse][allSubjects[key].SubjectName] = {name:allSubjects[key].SubjectName,qty:0,cssClass:'no_knowly'};
+  	}
+  };
 }
 
-angular.module('knowii',['ngResource']);
+
 // calendar page ng controller
 function calendarCtrl($scope, $http, $q) {
   //translation function
 	$scope.t = t;
-	var timeTable = $http.get("./js/data/knowlies.json");
-	var pupilSchedule = $http.get("./js/data//timetable.json");
-  var allSubjects = $http.get("./js/data/subjects.json");
+	var timeTable = $http.get("http://ec2-54-218-246-13.us-west-2.compute.amazonaws.com/jaxrs/knowlies");
+	var pupilSchedule = $http.get("http://ec2-54-218-246-13.us-west-2.compute.amazonaws.com/jaxrs/timetable");
+  var allSubjects = $http.get("http://ec2-54-218-246-13.us-west-2.compute.amazonaws.com/jaxrs/subjects");
   $q.all([timeTable, pupilSchedule, allSubjects]).then(function(arrayOfResults) {
     getAllData(arrayOfResults[0].data, arrayOfResults[1].data, arrayOfResults[2].data);
     $scope.pupils = arrayOfResults[1].data;
-	  $scope.studentName = $scope.pupils[0].Student;
-
+    $scope.studentName = pupils[0].Student;
+  
     // format date range for current week (ex.:5-10.5.13)
     var currentDate = new Date();
     var lastSunday = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay() + 0);
@@ -58,7 +57,7 @@ function calendarCtrl($scope, $http, $q) {
     
     // build calendar matrix object for HTML table - 7 hours x 6 days matrix
     $scope.calendar = {1:{1:{}, 2:{}, 3:{}, 4:{}, 5:{}, 6:{}}, 2:{1:{}, 2:{}, 3:{}, 4:{}, 5:{}, 6:{}}, 3:{1:{}, 2:{}, 3:{}, 4:{}, 5:{}, 6:{}}, 4:{1:{}, 2:{}, 3:{}, 4:{}, 5:{}, 6:{}}, 5:{1:{}, 2:{}, 3:{}, 4:{}, 5:{}, 6:{}}, 6:{1:{}, 2:{}, 3:{}, 4:{}, 5:{}, 6:{}}, 7:{1:{}, 2:{}, 3:{}, 4:{}, 5:{}, 6:{}}}; 
-  	  angular.forEach($scope.pupils, function(pupil) {
+    angular.forEach(pupils, function(pupil) {
     	// decide one or two rows
     	pupil.content =  '\<span class="row green"\>' + pupil.Course + '\</span\>\<span class="row"\>' + (pupil.Subject ? pupil.Subject : '&nbsp;') + '\</span\>';
     	// course content is linked to main page, passing course name processed by md5 (only if there is related data)
@@ -69,8 +68,8 @@ function calendarCtrl($scope, $http, $q) {
     		pupil.content = '<a class="course_link" href="main.html?title=' + pupil.Course + '">' + pupil.content + '</a>';
     	}
     	$scope.calendar[pupil.Hour][pupil.WeekDay] = pupil;
-	  });//foreach
-	});//get promise function
+    });
+  });
 }
 
 
@@ -79,9 +78,9 @@ function mainCtrl($scope, $http, $q) {
 	// translation function
 	$scope.t = t;
 	
-	var timeTable = $http.get("./js/data/knowlies.json");
-	var pupilSchedule = $http.get("./js/data//timetable.json");
-  var allSubjects = $http.get("./js/data/subjects.json");
+	var timeTable = $http.get("http://ec2-54-218-246-13.us-west-2.compute.amazonaws.com/jaxrs/knowlies");
+	var pupilSchedule = $http.get("http://ec2-54-218-246-13.us-west-2.compute.amazonaws.com/jaxrs/timetable");
+  var allSubjects = $http.get("http://ec2-54-218-246-13.us-west-2.compute.amazonaws.com/jaxrs/subjects");
   $q.all([timeTable, pupilSchedule, allSubjects]).then(function(arrayOfResults) {
   	getAllData(arrayOfResults[0].data, arrayOfResults[1].data, arrayOfResults[2].data);
   	$scope.subjectName = null;
@@ -97,9 +96,18 @@ function mainCtrl($scope, $http, $q) {
 		activeTab = sessionStorage.getItem('activeTab');
 		activeTab = activeTab == 'all' ? 'all' : 'mine';
 	}
+
 	catch(e){
 		activeTab = 'mine';
 	}
+    //set the 'sika' position
+     if (activeTab == 'all')
+        {
+            $(".sika").addClass("allPoint");
+        }
+        else{
+             $(".sika").removeClass("allPoint");
+        }
 	
 	// active classes
 	$scope.mineTabClass = activeTab == 'mine' ? ' active' : '';
@@ -114,71 +122,91 @@ function mainCtrl($scope, $http, $q) {
 			sessionStorage.setItem('activeTab', (type == 'all' ? 'all' : 'mine'));
 		}
 		catch(e){}
+        //set the 'sika' position
+        if(type== 'all')
+        {
+            $(".sika").addClass("allPoint");
+        }
+        else{
+             $(".sika").removeClass("allPoint");
+        }
 	};
 
 	var type, ind = 0, courseIndex = GetURLParameter('i'), title = GetURLParameter('title');
-	
+
 	$scope.updateCourses = function(populateRightSideMenu) {
-		courseIndex = courseIndex === false || !courseIndex ? false : courseIndex;
-  	$scope.courseName = courseIndex === false ? (title === false ? t('Main') : decodeURIComponent(title)) : courses[courseIndex].OwnedByCourse;
-  	// update page title 
-  	document.title = $scope.courseName;
-  	
-  	$scope.coursesMine = [];
-  	$scope.coursesAll = [];
-  	if (populateRightSideMenu) {
-  	  //$scope.subjectMenu = uniqueSubjects;
-  		//$scope.subjectMenu = {};
-  		$scope.subjectMenu = courseIndex === false ? uniqueSubjects : courseSubjects[courses[courseIndex].OwnedByCourse];
-  	}
-  	
-  	if (courseIndex === false) {
-  		$scope.subjectMenu = {};
-  	}
-  	else {
-    	angular.forEach(courses, function(course) {
-    		// if subject is passed in URL, filter by this subject
-    		if (courseIndex !== false && course.OwnedByCourse != $scope.courseName) {
-    		}
-    		else if ($scope.subjectName && course.CourseSubject != $scope.subjectName) { 			
-    		}
-    		else if ($scope.searchTerm && course.KnowlyRemarks.search($scope.searchTerm) == -1) {
-    		}
-    		else {
-    			course.voteStars = course.Rank ? 'stars_' + course.Rank : 'no_stars';
-    			course.messagesQty = getRandomInt(1, 9);
-    			course.share1Disabled = course.Pin && parseInt(course.Pin) ? '' : (course.Pin == '' ? ' hidden' : ' disabled');
-    			course.share2Disabled = course.Share && parseInt(course.Share) ? '' : (course.Share == '' ? ' hidden' : ' disabled');
-    			course.share3Disabled = course.Archive && parseInt(course.Archive) ? '' : (course.Archive == '' ? ' hidden' : ' disabled');
-    			course.date = getRandomInt(1, 28) + '.' + getRandomInt(1, 12) + '.' + getRandomInt(10, 12);
-    			course.index = ind;
-    			
-      		if (course.Type == translations.Private) {    			
-      		  $scope.coursesMine.push(course);
-      		}
-      		else {
-      			$scope.coursesAll.push(course);
-      		}
-      		
-      		// populate right side menu data
-      		if (populateRightSideMenu) {
-      		  if (!$scope.subjectMenu[course.CourseSubject]) {
-      			  $scope.subjectMenu[course.CourseSubject] = {name:course.CourseSubject, qty:1, cssClass:''};
-      		  }
-      		  else {
-      			  $scope.subjectMenu[course.CourseSubject].qty++;
-      			  $scope.subjectMenu[course.CourseSubject].cssClass = '';
-      		  }
-      		}
-    		}
-    		ind++;
-    	});
-  	}
-    // make sure, there areat least 7 items
-  	while (Object.keys($scope.subjectMenu).length < 7) {
-  		// add t('Search results') to key, which starts with Hebrew tav, thus ensuring last position in sorted array
-  		$scope.subjectMenu[t('Search results') + '_placeHolder_' + Object.keys($scope.subjectMenu).length] = {name:' ', qty:0, cssClass:'place_holder'};
-  	}
+	    courseIndex = courseIndex === false || !courseIndex ? false : courseIndex;
+	    $scope.courseName = courseIndex === false ? (title === false ? t('Main') : decodeURIComponent(title)) : courses[courseIndex].OwnedByCourse;
+	    // update page title 
+	    document.title = $scope.courseName;
+
+	    $scope.coursesMine = [];
+	    $scope.coursesAll = [];
+	    if(populateRightSideMenu) {
+	        //$scope.subjectMenu = uniqueSubjects;
+	        //$scope.subjectMenu = {};
+	        $scope.subjectMenu = courseIndex === false ? uniqueSubjects : courseSubjects[courses[courseIndex].OwnedByCourse];
+	    }
+
+	    if(courseIndex === false) {
+	        $scope.subjectMenu = {};
+	    }
+	    else {
+	        angular.forEach(courses, function(course) {
+	            // if subject is passed in URL, filter by this subject
+	            if(courseIndex !== false && course.OwnedByCourse != $scope.courseName) {
+	            }
+	            else if($scope.subjectName && course.CourseSubject != $scope.subjectName) {
+	            }
+	            else if($scope.searchTerm && course.KnowlyRemarks.search($scope.searchTerm) == -1) {
+	            }
+	            else {
+	                course.voteStars = course.Rank ? 'stars_' + course.Rank : 'no_stars';
+	                course.messagesQty = getRandomInt(1, 9);
+	                course.share1Disabled = course.Pin && parseInt(course.Pin) == 1 ? ' pin' : (course.Pin == '' ? ' hidden' : ' disabled');
+	                course.share2Disabled = course.Share && parseInt(course.Share) == 1 ? ' share' : (course.Share == '' ? ' hidden' : ' disabled');
+	                course.share3Disabled = course.Archive && parseInt(course.Archive) == 1 ? ' archive' : (course.Archive == '' ? ' hidden' : ' disabled');
+	                course.date = getRandomInt(1, 28) + '.' + getRandomInt(1, 12) + '.' + getRandomInt(10, 12);
+	                course.index = ind;
+	                var docTypeClass = t('doc') == course.DocuType ? 'doc' : (t('link') == course.DocuType ? 'link' : (t('image') == course.DocuType ? 'image' : (t('video') == course.DocuType ? 'video' : (t('presen') == course.DocuType ? 'presen' : ''))));
+	                if(docTypeClass == "") {
+	                    docTypeClass =course.DocuType;
+	                }
+	                course.docTypeClass = docTypeClass;
+                    
+                     var related = t('mine') == course.Related ? 'mine' : (t('student') == course.Related ? 'student' : (t('teacher') == course.Related ? 'teacher':'' ));
+	                if(related == "") {
+	                    related ='teacher';
+	                }
+	                course.relatedClass = related ;
+
+
+	                if(course.Type == translations.Private) {
+	                    $scope.coursesMine.push(course);
+	                }
+	                else {
+	                    $scope.coursesAll.push(course);
+	                }
+
+	                // populate right side menu data
+	                if(populateRightSideMenu) {
+	                    if(!$scope.subjectMenu[course.CourseSubject]) {
+	                        $scope.subjectMenu[course.CourseSubject] = { name: course.CourseSubject, qty: 1, cssClass: '' };
+	                    }
+	                    else {
+	                        $scope.subjectMenu[course.CourseSubject].qty++;
+	                        $scope.subjectMenu[course.CourseSubject].cssClass = '';
+	                    }
+	                }
+	            }
+	            ind++;
+	        });
+	    }
+	    // make sure, there areat least 7 items
+	    while(Object.keys($scope.subjectMenu).length < 7) {
+	        // add t('Search results') to key, which starts with Hebrew tav, thus ensuring last position in sorted array
+	        $scope.subjectMenu[t('Search results') + '_placeHolder_' + Object.keys($scope.subjectMenu).length] = { name: ' ', qty: 0, cssClass: 'place_holder' };
+	    }
 	};
 	
 	$scope.submitSearch = function(search) {
@@ -203,15 +231,13 @@ function mainCtrl($scope, $http, $q) {
 //preview page ng controller
 function previewCtrl($scope, $http, $q) {
   //translation function
-	$scope.t = t;
-	
+	$scope.t = t;	
 	var courseIndex = GetURLParameter('i'); 
-
 	courseIndex = courseIndex === false ? 0 : courseIndex;
 	
-	var timeTable = $http.get("./js/data/knowlies.json");
-	var pupilSchedule = $http.get("./js/data//timetable.json");
-  var allSubjects = $http.get("./js/data/subjects.json");
+	var timeTable = $http.get("http://ec2-54-218-246-13.us-west-2.compute.amazonaws.com/jaxrs/knowlies");
+	var pupilSchedule = $http.get("http://ec2-54-218-246-13.us-west-2.compute.amazonaws.com/jaxrs/timetable");
+  var allSubjects = $http.get("http://ec2-54-218-246-13.us-west-2.compute.amazonaws.com/jaxrs/subjects");
   $q.all([timeTable, pupilSchedule, allSubjects]).then(function(arrayOfResults) {
   	getAllData(arrayOfResults[0].data, arrayOfResults[1].data, arrayOfResults[2].data);
   	$scope.iframeSrc = courses[courseIndex].Link;
@@ -219,19 +245,26 @@ function previewCtrl($scope, $http, $q) {
   	if ($scope.iframeSrc.search('youtube.com') != -1) {
   		$scope.iframeSrc = 'http://www.youtube.com/embed/' + GetURLParameter('v', $scope.iframeSrc);
   	}
-  	
-  	courses[courseIndex].voteStars = courses[courseIndex].Rank ? 'stars_' + courses[courseIndex].Rank : 'no_stars';
-  	courses[courseIndex].share1Disabled = courses[courseIndex].Pin && parseInt(courses[courseIndex].Pin) ? '' : ' disabled';
-  	courses[courseIndex].share2Disabled = courses[courseIndex].Share && parseInt(courses[courseIndex].Share) ? '' : ' disabled';
-  	courses[courseIndex].share3Disabled = courses[courseIndex].Archive && parseInt(courses[courseIndex].Archive) ? '' : ' disabled';
-  	$scope.course = courses[courseIndex];
   
+    $scope.course = courses[courseIndex];
+    $scope.course.voteStars = courses[courseIndex].Rank ? 'stars_' + courses[courseIndex].Rank : 'no_stars';
+    $scope.course.date2 =  getRandomInt(1, 28) + '.' + getRandomInt(1, 12) + '.' + getRandomInt(10, 12);;
+    $scope.course.share1Disabled = courses[courseIndex].Pin && parseInt(courses[courseIndex].Pin) == 1 ? ' pin' : (courses[courseIndex].Pin == '' ? ' hidden' : ' disabled');
+  	$scope.course.share2Disabled = courses[courseIndex].Share && parseInt(courses[courseIndex].Share) == 1 ? ' share' : (courses[courseIndex].Share == '' ? ' hidden' : ' disabled');
+  	$scope.course.share3Disabled = courses[courseIndex].Archive && parseInt(courses[courseIndex].Archive) == 1 ? ' archive' : (courses[courseIndex].Archive == '' ? ' hidden' : ' disabled');
+    $scope.course.messagesQty = getRandomInt(1, 9);
   	document.title = courses[courseIndex].CourseSubject;
   });
 }
     
 
-$(document).ready(function(){	
+$(document).ready(function(){
+	// main html, student courses drop down
+	$('XXX#available_courses li a.no_knowly, li.qty_0 a').live('click', function(){
+
+		return false;
+	});
+	
 	// disabled share link on course footer
 	$('.course_footer a.footer_share.disabled').bind('click', function(){
 		return false;
