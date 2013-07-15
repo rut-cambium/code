@@ -132,7 +132,7 @@ function mainCtrl($scope, $http, $q) {
         }
 	};
 
-	var type, ind = 0, courseIndex = GetURLParameter('i'), title = GetURLParameter('title');
+	var type, courseIndex = GetURLParameter('i'), title = GetURLParameter('title');
 
 	$scope.updateCourses = function(populateRightSideMenu) {
 	    courseIndex = courseIndex === false || !courseIndex ? false : courseIndex;
@@ -167,14 +167,13 @@ function mainCtrl($scope, $http, $q) {
 	                course.share2Disabled = course.Share && parseInt(course.Share) == 1 ? ' share' : (course.Share == '' ? ' hidden' : ' disabled');
 	                course.share3Disabled = course.Archive && parseInt(course.Archive) == 1 ? ' archive' : (course.Archive == '' ? ' hidden' : ' disabled');
 	                course.date = getRandomInt(1, 28) + '.' + getRandomInt(1, 12) + '.' + getRandomInt(10, 12);
-	                course.index = ind;
 	                var docTypeClass = t('doc') == course.DocuType ? 'doc' : (t('link') == course.DocuType ? 'link' : (t('image') == course.DocuType ? 'image' : (t('video') == course.DocuType ? 'video' : (t('presen') == course.DocuType ? 'presen' : ''))));
-	                if(docTypeClass == "") {
-	                    docTypeClass =course.DocuType;
+	                if (docTypeClass == "") {
+	                    docTypeClass = course.DocuType;
 	                }
 	                course.docTypeClass = docTypeClass;
                     
-                     var related = t('mine') == course.Related ? 'mine' : (t('student') == course.Related ? 'student' : (t('teacher') == course.Related ? 'teacher':'' ));
+                  var related = t('mine') == course.Related ? 'mine' : (t('student') == course.Related ? 'student' : (t('teacher') == course.Related ? 'teacher' : ''));
 	                if(related == "") {
 	                    related ='teacher';
 	                }
@@ -199,7 +198,6 @@ function mainCtrl($scope, $http, $q) {
 	                    }
 	                }
 	            }
-	            ind++;
 	        });
 	    }
 	    // make sure, there areat least 7 items
