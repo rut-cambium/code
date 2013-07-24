@@ -16,8 +16,17 @@ knowiiApp.
 
 knowiiApp.
   factory('Knowies', function($resource) {
-    var result = $resource('http://ec2-54-218-246-13.us-west-2.compute.amazonaws.com/jaxrs/:knowliesType/:studentID?course=:courseID&subject=:subjectID&page=:page', {}, {
-      query: {method:'GET', params:{knowliesType:'knowlies', studentID:101, courseID:9, subjectID:0, page:1}, isArray:true}
+    var result = $resource('http://ec2-54-218-246-13.us-west-2.compute.amazonaws.com/jaxrs/knowlies/:studentID?course=:courseID&subject=:subjectID&page=:page', {}, {
+      query: {method:'GET', params:{studentID:101, courseID:9, subjectID:0, page:1}, isArray:true}
+    });
+    return result;
+  }
+);
+
+knowiiApp.
+  factory('MyKnowies', function($resource) {
+    var result = $resource('http://ec2-54-218-246-13.us-west-2.compute.amazonaws.com/jaxrs/myKnowlies/:studentID?course=:courseID&subject=:subjectID&page=:page', {}, {
+      query: {method:'GET', params:{studentID:101, courseID:9, subjectID:0, page:1}, isArray:true}
     });
     return result;
   }

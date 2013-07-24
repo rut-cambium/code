@@ -128,6 +128,10 @@ left: 14px;
   color:white;
   width:255px;
 }
+#first_sidebar #available_courses li.empty a {
+  cursor:default;
+  color:rgb(236, 236, 236);
+}
 #first_sidebar #available_courses li a.no_knowly, #first_sidebar #available_courses li.no_knowly span {
   cursor:default;
   text-decoration:none;
@@ -145,6 +149,9 @@ left: 14px;
   font-size:18px;
   color:#242424;
   text-decoration:none;
+}
+menu#subjects_menu li a.active {
+  font-weight:bold;
 }
 #first_sidebar menu li.qty_0 span, #first_sidebar menu li.qty_0 {
   XXXcursor:default;
@@ -302,6 +309,7 @@ border: 1px solid #d9d9d9;
 #nav_bar {
   position:relative;
   margin:-41px 0 -3px;
+  width:700px;
 }
 #nav_tabs {
   direction:ltr;
@@ -321,7 +329,7 @@ border: 1px solid #d9d9d9;
 #nav_tabs .tab.mine {
   margin:0;
 }
-#nav_tabs .tab.active, #nav_tabs .tab:hover {
+#nav_tabs.mine .tab.mine, #nav_tabs.all .tab.all, #nav_tabs .tab:hover {
   background-position: -1px 0;
 }
 #nav_tabs .tab.add {
@@ -338,12 +346,11 @@ border: 1px solid #d9d9d9;
   width:26px;
   height:34px;
   position:absolute;
-top: -1px;
-right: 10px;
+  top: -1px;
+  right: 10px;
 }
-#nav_tabs .sika.allPoint
-{
-    right: 129px;
+#nav_tabs.all span.sika {
+  right: 129px;
 }
 form#search {
   background:url(images/bg_search_new.png) no-repeat;
@@ -468,9 +475,9 @@ table th, table td {
   padding:0;
 }
 table td a.course_link {
-  width:142px;
-  height:66px;
-  display:inline-block;
+  XXwidth:142px;
+  XXheight:66px;
+  XXdisplay:inline-block;
   color:#494949;
   text-decoration:none;
 }

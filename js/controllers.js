@@ -17,7 +17,12 @@ function TimetableCtrl($scope, TimeTable, $routeParams) {
   // get timetable data
 	TimeTable.query({studentID: $scope.studentID}, function(data){
 		angular.forEach(data, function(item) {
-      item.content = '<a class="course_link" href="#/courses/' + $scope.studentID + '?course=' + item.Courses_Id + '">' + item.CourseName + '</a>';
+		  if (item.knowliesFlag) {
+        item.content = '<a class="course_link" href="#/courses/' + $scope.studentID + '?course=' + item.Courses_Id + '">' + item.CourseName + '</a>';
+      }
+      else {
+        item.content = item.CourseName;
+      }
       $scope.calendar[item.HourOfTheDay][item.DayOfTheWeek] = item;
     });
 	});
@@ -25,39 +30,77 @@ function TimetableCtrl($scope, TimeTable, $routeParams) {
 
 
 
-function CoursesCtrl($scope, $rootScope, Subjects, Knowies, TimeTable, $routeParams) {
+function CoursesCtrl($scope, $rootScope, Subjects, Knowies, MyKnowies, TimeTable, $routeParams) {
   //translation function
 	$scope.t = t; 
 	$scope.studentID = $routeParams.studentID ? $routeParams.studentID : 101;
-	$scope.courseID = $routeParams.course ? $routeParams.course : 9;
+	$scope.subjectID = $routeParams.subject ? $routeParams.subject : 0;
 	$scope.page = 1;
-	$scope.subjectID = 0;
-	$scope.coursesMine = [];
-  $scope.coursesAll = [];
-  $scope.coursesNames = {};
+	//$scope.searchTerm = $routeParams.pattern ? $routeParams.pattern : '';
+	$scope.courses = [];
+  $rootScope.coursesNames = $rootScope.coursesNames ? $rootScope.coursesNames : {};
   $scope.mineTabClass = 'active';
   $scope.courseName = "&nbsp;";
-  $rootScope.activeTab = $rootScope.activeTab ? $rootScope.activeTab : 'all';
-  var knowliesType = $rootScope.activeTab == 'mine' ? 'myKnowlies' : 'knowlies';
-  Knowies.query({knowliesType:knowliesType, studentID:$scope.studentID, courseID:$scope.courseID, subjectID:$scope.subjectID, page:$scope.page}, function(knowiesData){
-    angular.forEach(knowiesData, function(course) {
-      //console.log(course);
-      var stars = getRandomInt(0, 5);
-      course.voteStars = stars ? 'stars_' + stars : 'no_stars';
-      course.messagesQty = getRandomInt(1, 9);
-      course.date = getRandomInt(1, 28) + '.' + getRandomInt(1, 12) + '.' + getRandomInt(10, 12);
-      $scope.coursesMine.push(course);
+  $rootScope.activeTab = $rootScope.activeTab ? $rootScope.activeTab : 'mine';
+   
+  // get subjects data, for subjects menu
+  if (($routeParams.course && $rootScope.courseID != $routeParams.course) || !_.size($rootScope.subjectMenu)) {
+    var subjectMenu = [];
+    Subjects.query({studentID: $scope.studentID}, function(data){
+      angular.forEach(data, function(item) {
+        item.cssClass = $scope.subjectID == item.Id ? 'active' : '';
+        item.href = '#/courses/'+$scope.studentID+'?subject='+item.Id+'&course='+$rootScope.courseID;
+        subjectMenu[item.Id] = item;
+      });
+      $rootScope.subjectMenu = subjectMenu;
+    });   
+  }
+  else {
+    angular.forEach($rootScope.subjectMenu, function(item) {
+      item.cssClass = $scope.subjectID == item.Id ? 'active' : '';
     });
-  });
+  }
   
+  $rootScope.courseID = $routeParams.course ? $routeParams.course : 9;
+
   // get timetable data, for courses menu
-  TimeTable.query({studentID: $scope.studentID}, function(data){
-    angular.forEach(data, function(item) {
-      $scope.coursesNames[item.Courses_Id] = {id:item.Courses_Id,title:item.CourseName};
+  if (!_.size($rootScope.coursesNames)) {
+    TimeTable.query({studentID: $scope.studentID}, function(data){
+      angular.forEach(data, function(item) {
+        $rootScope.coursesNames[item.Courses_Id] = {id:item.Courses_Id,title:item.CourseName,cssClass:(item.knowliesFlag?'':'empty'),href:(item.knowliesFlag?'#/courses/'+$scope.studentID+'?subject=0&course='+item.Courses_Id:'')};
+      });
+      // add course name
+      $scope.courseName = $rootScope.coursesNames[$rootScope.courseID].title;
     });
-    // add course name
-    $scope.courseName = $scope.coursesNames[$scope.courseID].title;
-  });
+  }
+  else {
+    // add course name from stored names
+    $scope.courseName = $rootScope.coursesNames[$rootScope.courseID].title;
+  }
+  
+  if ($rootScope.activeTab == 'mine') {
+    MyKnowies.query({studentID:$scope.studentID, courseID:$rootScope.courseID, subjectID:$scope.subjectID, page:$scope.page}, function(knowiesData){
+      angular.forEach(knowiesData, function(course) {
+        //console.log(course);
+        var stars = getRandomInt(0, 5);
+        course.voteStars = stars ? 'stars_' + stars : 'no_stars';
+        course.messagesQty = getRandomInt(1, 9);
+        course.date = getRandomInt(1, 28) + '.' + getRandomInt(1, 12) + '.' + getRandomInt(10, 12);
+        $scope.courses.push(course);
+      });
+    });
+  }
+  else {
+    Knowies.query({studentID:$scope.studentID, courseID:$rootScope.courseID, subjectID:$scope.subjectID, page:$scope.page}, function(knowiesData){
+      angular.forEach(knowiesData, function(course) {
+        var stars = getRandomInt(0, 5);
+        course.voteStars = stars ? 'stars_' + stars : 'no_stars';
+        course.messagesQty = getRandomInt(1, 9);
+        course.date = getRandomInt(1, 28) + '.' + getRandomInt(1, 12) + '.' + getRandomInt(10, 12);
+        $scope.courses.push(course);
+      });
+    });
+  }
   
   // toggle available courses menu
   $scope.toggleCoursesList = function(a) {
@@ -65,7 +108,7 @@ function CoursesCtrl($scope, $rootScope, Subjects, Knowies, TimeTable, $routePar
     return false;
   }
   
-  //main tabs
+  //main tabs event
   $scope.tabClicked = function(type){
     $scope.mineTabClass = type == 'mine' ? ' active' : '';
     $scope.allTabClass = type == 'all' ? ' active' : '';    
@@ -73,15 +116,20 @@ function CoursesCtrl($scope, $rootScope, Subjects, Knowies, TimeTable, $routePar
     $rootScope.activeTab = type == 'all' ? 'all' : 'mine';
     
     //set the 'sika' position
-    if(type == 'all') {
+    if (type == 'all') {
       $(".sika").addClass("allPoint");
     }
     else {
       $(".sika").removeClass("allPoint");
     }
-    
-    window.location.reload();
   };
+  
+  // search form submitted
+  $scope.submitSearch = function(pattern) {
+    console.log('pattern = ' + pattern);
+    console.log('#/courses/'+ $scope.studentID +'?course=' + $rootScope.courseID + '&subject=' + $scope.subjectID + '&' + ($rootScope.activeTab == 'all' ? 'a' : 'm'));
+    window.location.hash = '#/courses/'+ $scope.studentID +'?course=' + $rootScope.courseID + '&subject=' + $scope.subjectID + '&' + $rootScope.activeTab == 'all' ? 'a' : 'm';
+  }
 
 return;
 	$http.get('././data/time_table.json').success(function(courses) {

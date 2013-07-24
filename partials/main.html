@@ -6,7 +6,7 @@
   <span class="my_messages_qty">5</span>   
   
   <form id="search" ng-submit="submitSearch(searchTerm)">
-    <input class="text" type="text" placeholder="{{t('Search')}}" name="search" ng-model="searchTerm" />
+    <input class="text" type="text" placeholder="{{t('Search')}}" name="pattern" ng-model="searchTerm" />
     <input class="submit" type="submit" value="" />
   </form> 
 </header>
@@ -15,15 +15,15 @@
   <div id="header_tabs">
     <a ng-click="toggleCoursesList()" href="" class="h_tabs" ng-bind-html-unsafe="courseName"></a>
     <menu id="available_courses">
-      <li ng-repeat="(key, data) in coursesNames">
-        <a href="#/courses/{{studentID}}?course={{data.id}}">{{data.title}}</a>
+      <li ng-repeat="(key, data) in coursesNames" class="{{data.cssClass}}">
+        <a href="{{data.href}}">{{data.title}}</a>
       </li>
     </menu>
   </div>
   
   <menu id="subjects_menu">
-    <li ng-repeat="subject in subjectMenu" class="qty_{{subject.qty}} {{subject.cssClass}}" ng-click="menuClick(subject.name)">
-      <span>{{subject.name}}</span>
+    <li ng-repeat="subject in subjectMenu | filter:{Courses_Id:courseID}" ng-click="menuClick(subject.SubjectName)">
+      <a class="{{subject.cssClass}}" href="{{subject.href}}">{{subject.SubjectName}}</a>
     </li>
   </menu>
   
@@ -41,16 +41,16 @@
 </aside>
 <div id="content">
   <div id="nav_bar">
-    <div id="nav_tabs">
+    <div id="nav_tabs" class="{{activeTab}}">
       <span class="tab add">&nbsp;</span>
-      <span class="tab all {{allTabClass}}" rel="courses_all" ng-click="tabClicked('all')">{{t('All')}}</span>
-      <span class="tab mine {{mineTabClass}}" rel="courses_mine" ng-click="tabClicked('mine')">{{t('Mine')}}</span> 
+      <a href="#/courses/{{studentID}}?course={{courseID}}&subject={{subjectID}}&a" class="tab all" rel="courses_all" ng-click="tabClicked('all')">{{t('All')}}</a>
+      <a href="#/courses/{{studentID}}?course={{courseID}}&subject={{subjectID}}&m" class="tab mine" rel="courses_mine" ng-click="tabClicked('mine')">{{t('Mine')}}</a> 
       <span class="sika"></span>      
     </div>
   </div>
   <div id="courses_container">
     <div class="courses_section" id="courses_mine">
-      <div ng-repeat="course in coursesMine | filter:searchTerm" class="course">
+      <div ng-repeat="course in courses" class="course">
         <a class-"course_box_link" href="#knowii/{{course.Id}}"></a>
         <div class="image_box">
           <a href="#knowii/{{course.Id}}">
