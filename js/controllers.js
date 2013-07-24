@@ -36,7 +36,7 @@ function CoursesCtrl($scope, $rootScope, Subjects, Knowies, MyKnowies, TimeTable
 	$scope.studentID = $routeParams.studentID ? $routeParams.studentID : 101;
 	$scope.subjectID = $routeParams.subject ? $routeParams.subject : 0;
 	$scope.page = 1;
-	//$scope.searchTerm = $routeParams.pattern ? $routeParams.pattern : '';
+	$scope.searchTerm = $routeParams.pattern ? $routeParams.pattern : '';
 	$scope.courses = [];
   $rootScope.coursesNames = $rootScope.coursesNames ? $rootScope.coursesNames : {};
   $scope.mineTabClass = 'active';
@@ -127,8 +127,8 @@ function CoursesCtrl($scope, $rootScope, Subjects, Knowies, MyKnowies, TimeTable
   // search form submitted
   $scope.submitSearch = function(pattern) {
     console.log('pattern = ' + pattern);
-    console.log('#/courses/'+ $scope.studentID +'?course=' + $rootScope.courseID + '&subject=' + $scope.subjectID + '&' + ($rootScope.activeTab == 'all' ? 'a' : 'm'));
-    window.location.hash = '#/courses/'+ $scope.studentID +'?course=' + $rootScope.courseID + '&subject=' + $scope.subjectID + '&' + $rootScope.activeTab == 'all' ? 'a' : 'm';
+    console.log('#/courses/'+ $scope.studentID +'?pattern=' + pattern + '&course=' + $rootScope.courseID + '&subject=' + $scope.subjectID + '&' + ($rootScope.activeTab == 'all' ? 'a' : 'm'));
+    window.location.hash = '#/courses/'+ $scope.studentID +'?pattern=' + pattern + '&course=' + $rootScope.courseID + '&subject=' + $scope.subjectID + '&' + ($rootScope.activeTab == 'all' ? 'a' : 'm');
   }
 
 return;
