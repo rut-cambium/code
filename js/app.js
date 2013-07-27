@@ -7,7 +7,7 @@ var knowlyApp = angular.module('courses', ['knowlyServices']).
   $routeProvider.
     when('/timetable/:studentID', {templateUrl: 'partials/timetable.html',   controller: TimetableCtrl}).
     when('/courses/:studentID', {templateUrl: 'partials/main.html', controller: CoursesCtrl}).
-    //when('/courses/:courseId', {templateUrl: 'partials/course-detail.html', controller: CourseDetailCtrl}).
+    when('/knowii/:studentID/:knowiiId', {templateUrl: 'partials/knowii-detail.html', controller: KnowiiDetailCtrl}).
     otherwise({redirectTo: '/timetable'});
 }]);
 

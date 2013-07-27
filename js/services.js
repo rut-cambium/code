@@ -33,8 +33,26 @@ knowiiApp.
 );
 
 knowiiApp.
+  factory('SearchKnowies', function($resource) {
+    var result = $resource('http://ec2-54-218-246-13.us-west-2.compute.amazonaws.com/jaxrs/knowlies/:studentID/search?pattern=:pattern&course=:courseID&subject=:subjectID', {}, {
+      query: {method:'GET', params:{studentID:101, courseID:9, subjectID:0}, isArray:true}
+    });
+    return result;
+  }
+);
+
+knowiiApp.
   factory('Subjects', function($resource) {
     var result = $resource('http://ec2-54-218-246-13.us-west-2.compute.amazonaws.com/jaxrs/subjects/:studentID', {}, {
+      query: {method:'GET', params:{studentID:101}, isArray:true}
+    });
+    return result;
+  }
+);
+
+knowiiApp.
+  factory('KnowiiInfo', function($resource) {
+    var result = $resource('http://ec2-54-218-246-13.us-west-2.compute.amazonaws.com/jaxrs/knowlies/:studentID/:knowiiID', {}, {
       query: {method:'GET', params:{studentID:101}, isArray:true}
     });
     return result;

@@ -1,8 +1,8 @@
 <header id="header">
-  <a href="#" id="logo"></a>
-  <a href="#" class="avatar"></a>
-  <a href="#" class="config"></a>
-  <a href="#" class="mail"></a> 
+  <a href="#timetable/{{studentID}}" id="logo"></a>
+  <a href="" class="avatar"></a>
+  <a href="" class="config"></a>
+  <a href="" class="mail"></a> 
   <span class="my_messages_qty">5</span>   
   
   <form id="search" ng-submit="submitSearch(searchTerm)">
@@ -22,7 +22,7 @@
   </div>
   
   <menu id="subjects_menu">
-    <li ng-repeat="subject in subjectMenu | filter:{Courses_Id:courseID}" ng-click="menuClick(subject.SubjectName)">
+    <li ng-repeat="subject in subjectMenu | filter:{Courses_Id:courseID}">
       <a class="{{subject.cssClass}}" href="{{subject.href}}">{{subject.SubjectName}}</a>
     </li>
   </menu>
@@ -51,9 +51,9 @@
   <div id="courses_container">
     <div class="courses_section" id="courses_mine">
       <div ng-repeat="course in courses" class="course">
-        <a class-"course_box_link" href="#knowii/{{course.Id}}"></a>
+        <a class-"course_box_link" href="#knowii/{{studentID}}/{{course.Id}}"></a>
         <div class="image_box">
-          <a href="#knowii/{{course.Id}}">
+          <a href="#knowii/{{studentID}}/{{course.Id}}">
             <img class="course_image" ng-src="{{course.ImageUrl}}" alt="{{course.SubjectName}}" title="{{course.SubjectName}}" rel="{{course.index}}" />
           </a>
         </div>
@@ -71,7 +71,7 @@
               <span></span>
             </span>
           </div>
-          <a href="preview.html?i={{course.index}}" class="course_text">
+          <a href="#knowii/{{studentID}}/{{course.Id}}" class="course_text">
             {{course.Description}}
           </a>
           <div class="course_footer">

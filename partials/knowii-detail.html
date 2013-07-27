@@ -1,0 +1,63 @@
+<header id="header">
+  <a href="#timetable/{{studentID}}" id="logo"></a>
+  <a href="" class="avatar"></a>
+  <a href="" class="config"></a>
+  <a href="" class="mail"></a>  
+  <span class="my_messages_qty">5</span>   
+  <a href="#courses/{{studentID}}?course={{courseID}}" class="back"></a>
+</header>
+<div id="stripped"></div>
+
+<div id="content">
+  <iframe width="980" height="600" src="{{iframeSrc}}" frameborder="0" allowfullscreen></iframe>
+</div>
+<aside id="first_sidebar">  
+    <section class="singleItemContent">
+       
+      <div class="course">
+        <div class="course_content">
+          <div class="course_header">
+            <span class="date">{{knowii.date}} | </span>  
+            <span class="author">{{knowii.First_Name}} {{knowii.Last_Name}}</span>
+            <span class="vote_stars {{knowii.voteStars}}">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </div>
+          <div class="course_text">{{knowii.Description}}</div>
+          <div class="course_footer">
+            <a class="footer_share share1 {{knowii.share1Disabled}}" href="#" title="{{t('Pin')}}"></a>
+            <a class="footer_share share2 {{knowii.share2Disabled}}" href="#" title="{{t('Share')}}"></a>
+            <a class="footer_share share3 {{knowii.share3Disabled}}" href="#" title="{{t('Archive')}}"></a>
+            <a href="#" class="course_messages">
+              <span class="course_messages_qty">{{knowii.messagesQty}}</span>
+            </a>
+          </div>
+        </div>
+      
+    </div>
+    </section>
+
+  <section id="messages_list">
+    <header>{{t('Messages')}}</header>
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </section>
+</aside>
