@@ -149,6 +149,11 @@ left: 14px;
   font-size:18px;
   color:#242424;
   text-decoration:none;
+  display:inline-block;
+  width:250px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 menu#subjects_menu li a.active {
   font-weight:bold;
@@ -319,12 +324,14 @@ border: 1px solid #d9d9d9;
   background:url(imagesNew/tabs.png) no-repeat 0 -41px;
   width:129px;
   height:41px;
-  line-height:41px;
+  line-height:45px;
   display:inline-block;
   margin-right:-32px;
   text-align:center;
   cursor:pointer;
   background-position: -194px 0;
+  color:inherit;
+  text-decoration:none;
 }
 #nav_tabs .tab.mine {
   margin:0;
